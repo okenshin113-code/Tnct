@@ -2,9 +2,6 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>TNCT Summative Test 2 Reviewer</title>
-<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#2f3a7a">
-<link rel="icon" type="image/png" href="icons/192.png"><link rel="apple-touch-icon" href="icons/192.png">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="TNCT Reviewer"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
 :root{--bg:#f6f4ee;--card:#fff;--tx:#1f2547;--mu:#5d6385;--ac:#2f3a7a;--ac2:#e8ebff;--ok:#1e7d4a;--no:#b3261e;--bd:#d9d6ca;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#14172b;--card:#1d2140;--tx:#eceefc;--mu:#a3a8cc;--ac:#9fb0ff;--ac2:#2a3066;--ok:#6fd49b;--no:#ff8a80;--bd:#343a6b}}
@@ -302,15 +299,29 @@ m.innerHTML=`<div class="card ks ${tan?"":"na"}"><h3 style="text-align:left;font
 <div class="card"><h3>⚙️ Your controls</h3><div class="row"><span class="note">⏱ Time for this part:</span><button class="btn s" onclick="tadj(-3)">−3s</button><b id="tdl">${tdu(tp)}s</b><button class="btn s" onclick="tadj(3)">+3s</button></div><div class="row"><span class="note">🚀 Speed:</span>${[.75,1,1.25,1.5,2].map(s=>`<button class="chip ${s==tm?"on":""}" onclick="tsp(${s})">${s}×</button>`).join("")}</div><div class="row"><button class="chip ${tauto?"on":""}" onclick="tauto=!tauto;tr()">${tauto?"▶ Auto-move: ON":"👆 Manual: tap ⏭"}</button><button class="chip ${tan?"on":""}" onclick="tan=!tan;tr()">✨ Animation ${tan?"ON":"OFF"}</button><button class="chip ${tv?"on":""}" onclick="tv=!tv;tr()">🔊 Voice ${tv?"ON":"OFF"}</button></div></div>`+(last?`<div class="row"><button class="btn" onclick="qz('${tl}')">🎯 Test yourself</button><button class="btn s" onclick="fc('${tl}')">Flashcards</button><button class="btn s" onclick="go('${tl}')">Back to notes</button></div>`:"")}
 function tadj(d){tdur[tl+tp]=Math.max(5,tdu(tp)+d);$("tdl").textContent=tdu(tp)+"s";if(tn)tplay()}
 function tsp(s){tm=s;const p=tn;tr();if(p)tplay()}
-function tplay(){tstop();tn=1;const tk=++ttk,k=TC[tl][tp],tx=ttx(k),d=tdu(tp);$("tpb").textContent="⏸ Pause";
+function tseg(k){const e=TE[tl][tp],t=TI[tl+tp],S=[];let n=0;
+const add=(d,sp)=>{const c=d.trim().split(" ").length;S.push({t:sp,a:n,b:n+c,p:Math.max(0,sp.length-d.trim().length)});n+=c};
+(k[3].match(/[^.!?]+[.!?]?/g)||[k[3]]).forEach(q=>{if(q.trim())add(q,q.trim())});
+if(t)t.forEach((x,j)=>add(x[0]+" "+x[1],(j?"":"Let us go one by one. ")+"Number "+(j+1)+". "+x[0]+". "+x[1]));
+else e[0].forEach((s,j)=>add(s,(j?"":"Let us break it down. ")+"Step "+(j+1)+". "+s));
+add(e[1],"For example. "+e[1]);
+return n==tN?S:[{t:ttx(k),a:0,b:tN,p:0}]}
+function tplay(){tstop();tn=1;const tk=++ttk,k=TC[tl][tp],S=tseg(k),d=tdu(tp);$("tpb").textContent="⏸ Pause";
 document.querySelectorAll(".ks .w,.ks .st,.ks .eg").forEach(e=>e.classList.remove("on","rd","show"));$("tw0").closest(".ks").classList.add("rv");
-let n=0,bd=0,run=0,fin=0;
+let n=0,st=0,t0=0,pace=70;
 const mk=i=>{const p=$("tw"+(i-1)),c=$("tw"+i);if(tan){if(p){p.classList.remove("on");p.classList.add("rd")}if(c){c.classList.add("on");const b=c.closest(".st,.eg");if(b)b.classList.add("show")}}};
-const done=()=>{if(fin||tk!=ttk)return;fin=1;clearInterval(tt);document.querySelectorAll(".ks .w").forEach(e=>{e.classList.remove("on");e.classList.add("rd")});document.querySelectorAll(".ks .st,.ks .eg").forEach(e=>e.classList.add("show"));if(tauto&&tp<TC[tl].length-1)setTimeout(()=>{if(tk==ttk&&tn)tgo(tp+1,true)},500);else{tn=0;$("tpb").textContent="🔁 Replay"}};
-const go2=()=>{if(run||tk!=ttk)return;run=1;tt=setInterval(()=>{if(!$("tw0")){tstop();return}if(bd)return;if(n<tN)mk(n++);else{clearInterval(tt);if(!tv)done();else setTimeout(done,d*500/tm)}},d*1000/tm/tN)};
-if(!tv||!window.speechSynthesis){go2();return}
-tspeak(tx,tm,go2,e=>{bd=1;const t=Math.min(tN-1,Math.floor(e.charIndex/tx.length*tN));while(n<=t)mk(n++)},done);
-setTimeout(go2,2500)}
+const up=i=>{while(n<=i&&n<tN)mk(n++)};
+const done=()=>{if(tk!=ttk)return;clearInterval(tt);document.querySelectorAll(".ks .w").forEach(e=>{e.classList.remove("on");e.classList.add("rd")});document.querySelectorAll(".ks .st,.ks .eg").forEach(e=>e.classList.add("show"));if(tauto&&tp<TC[tl].length-1)setTimeout(()=>{if(tk==ttk&&tn)tgo(tp+1,true)},500);else{tn=0;$("tpb").textContent="🔁 Replay"}};
+const timer=()=>{clearInterval(tt);tt=setInterval(()=>{if(!$("tw0")){tstop();return}if(n<tN)mk(n++);else done()},d*1000/tm/tN)};
+const run=c=>{clearInterval(tt);up(c.a);const w=Math.max(1,c.b-c.a),ms=Math.max(100,c.t.length*pace/(vr*tm))/w;tt=setInterval(()=>{if(c.bd)return;if(n<c.b)mk(n++);else clearInterval(tt)},ms)};
+if(!tv||!window.speechSynthesis){timer();return}
+try{SS.cancel();if(SS.paused)SS.resume()}catch(e){}
+const vs=vList(),v=vs.find(a=>a.name==vn)||vs[0];
+setTimeout(()=>{if(tk!=ttk)return;S.forEach((c,i)=>{const u=new SSU(c.t.replace(/&amp;|&/g," and ").replace(/→/g," leads to ").replace(/<[^>]+>/g," "));if(v){u.voice=v;u.lang=v.lang}u.rate=Math.min(2,vr*tm);
+u.onstart=()=>{if(tk!=ttk)return;st=1;t0=performance.now();run(c)};
+u.onboundary=e=>{if(tk!=ttk)return;c.bd=1;const f=Math.max(0,(e.charIndex-c.p)/Math.max(1,c.t.length-c.p));up(c.a+Math.min(c.b-c.a-1,Math.floor(f*(c.b-c.a))))};
+u.onend=u.onerror=()=>{if(tk!=ttk)return;if(t0)pace=(pace+(performance.now()-t0)/c.t.length*Math.min(2,vr*tm))/2;up(c.b-1);if(i==S.length-1)done()};
+try{SS.speak(u)}catch(e){}})},70);
+setTimeout(()=>{if(!st&&tk==ttk)timer()},3500)}
 go("qk");
-if("serviceWorker" in navigator&&/^https?:/.test(location.protocol))addEventListener("load",()=>{try{navigator.serviceWorker.register("sw.js").then(()=>navigator.serviceWorker.ready).then(()=>{const d=document.createElement("div");d.textContent="✅ Ready to use offline";d.style.cssText="position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#2f3a7a;color:#fff;padding:10px 16px;border-radius:20px;font:600 14px system-ui;z-index:99;transition:opacity .6s";document.body.appendChild(d);setTimeout(()=>d.style.opacity=0,3000);setTimeout(()=>d.remove(),3700)})}catch(e){}});
 </script></body></html>
